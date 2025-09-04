@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loan EMI Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #84319d;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #cf6ca9;
+    }
+    .calculator {
+      background: #fbfafb;
+      border: 2px solid #c61992;
+      border-radius: 10px;
+      width: 350px;
+      margin: 20px auto;
+      padding: 20px;
+      text-align: left;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .calculator h2 {
+      text-align: center;
+      color: #9c06a1;
+      margin-bottom: 20px;
+    }
+    label {
+      font-weight: bold;
+      color: #74307a;
+      display: block;
+      margin-top: 10px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #890493;
+      border-radius: 5px;
+    }
+    .result {
+      background: #cb2ca9;
+      color: rgb(241, 239, 241);
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>23CS2049-Web Technology Lab-2025</h1>
+  
+  <div class="calculator">
+    <h2>Loan EMI Calculator</h2>
+
+    <label>Loan Amount (₹):</label>
+    <input type="number" id="loanAmount" placeholder="Enter Loan Amount">
+
+    <label>Annual Interest Rate (%):</label>
+    <input type="number" id="interestRate" placeholder="Enter Interest Rate">
+
+    <label>Tenure (Years):</label>
+    <input type="number" id="tenure" placeholder="Enter Tenure in Years">
+
+    <div class="result" id="loanResult">Enter details to calculate EMI</div>
+  </div>
+
+  <script>
+    // Listen to input changes and calculate EMI dynamically
+    document.querySelectorAll("input").forEach(input => {
+      input.addEventListener("input", calculateEMI);
+    });
+
+    function calculateEMI() {
+      let P = parseFloat(document.getElementById("loanAmount").value);
+      let annualRate = parseFloat(document.getElementById("interestRate").value);
+      let years = parseFloat(document.getElementById("tenure").value);
+
+      if (isNaN(P) || isNaN(annualRate) || isNaN(years) || P <= 0 || annualRate <= 0 || years <= 0) {
+        document.getElementById("loanResult").innerHTML = "Please enter valid inputs!";
+        return;
+      }
+
+      let R = (annualRate / 12) / 100;  // Monthly interest rate
+      let N = years * 12;  // Months
+
+      // EMI Formula
+      let EMI = (P * R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
+
+      let totalRepayment = EMI * N;
+      let totalInterest = totalRepayment - P;
+
+      document.getElementById("loanResult").innerHTML = `
+        Loan Amount: ₹${P.toLocaleString()} <br>
+        Total Interest: ₹${totalInterest.toLocaleString(undefined, {maximumFractionDigits:0})} <br>
+        EMI: ₹${EMI.toLocaleString(undefined, {maximumFractionDigits:0})} <br>
+        Total Repayment: ₹${totalRepayment.toLocaleString(undefined, {maximumFractionDigits:0})}
+      `;
+    }
+  </script>
+
+</body>
+</html>
